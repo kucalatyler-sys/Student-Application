@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>University Application</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        width: 95%;
+        margin: 20px auto;
+        border: 2px dashed #ccc;
+        padding: 20px;
+        background-color: white;
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-size: 40px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .title {
+        text-align: center;
+        flex: 1;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .login {
+        font-size: 14px;
+        text-decoration: none;
+        background: red;
+        color: black;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* PROGRESS BAR */
+    .progress {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+        align-items: center;
+    }
+
+    .step {
+        text-align: center;
+        flex: 1;
+        position: relative;
+    }
+
+    .circle {
+        width: 15px;
+        height: 15px;
+        background: black;
+        border-radius: 50%;
+        margin: auto;
+    }
+
+    .step:first-child .circle,
+    .step.active .circle {
+        background: red;
+    }
+
+    .step p {
+        font-size: 12px;
+    }
+
+    /* LAYOUT */
+    .main {
+        display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar button {
+        width: 100%;
+        background: red;
+        color: black;
+        border: 2px solid black;
+        padding: 15px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* FORM */
+    .form-area {
+        flex: 1;
+        padding: 0 40px;
+    }
+
+    .form-card {
+        border: 2px solid #444;
+        border-radius: 8px;
+        padding: 24px;
+        max-width: 520px;
+        margin: 0 auto;
+        background: #fafafa;
+    }
+
+    .form-card h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #999;
+        border-radius: 5px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    /* NAV BUTTONS */
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+
+    .btn {
+        border: 3px solid black;
+        padding: 15px 30px;
+        background: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .next {
+        display: flex;
+        align-items: center;
+    }
+
+    .arrow {
+        margin-left: 10px;
+        font-size: 18px;
+    }
+
+    .review-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .review-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #333;
+        font-size: 18px;
+        border-bottom: 2px solid #0066ff;
+        padding-bottom: 5px;
+    }
+
+    .review-item {
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+
+    .review-item strong {
+        color: #555;
+        display: inline-block;
+        min-width: 200px;
+    }
+
+    .submit-btn {
+        background: #0066ff;
+        color: white;
+        border: 3px solid #0066ff;
+    }
+
+    .submit-btn:hover {
+        background: #0051d4;
+        border-color: #0051d4;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">CST</div>
+        <div class="title">University Application</div>
+        <a class="login" href="{{ url_for('auth.login') }}">Log-in/Sign-up</a>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress">
+
+        <div class="step"><div class="circle"></div><p>Personal Information</p></div>
+        <div class="step active"><div class="circle"></div><p>Finances</p></div>
+        <div class="step active"><div class="circle"></div><p>Academic History</p></div>
+        <div class="step active"><div class="circle"></div><p>Parental Income</p></div>
+        <div class="step active"><div class="circle"></div><p>Major</p></div>
+        <div class="step active"><div class="circle"></div><p>Additional Information</p></div>
+        <div class="step active"><div class="circle"></div><p>Review & Submit</p></div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <button>University Application</button>
+            <button>Registration Status</button>
+            <button>Information</button>
+            <button>Staff Inquiries</button>
+        </div>
+
+        <!-- FORM -->
+        <div class="form-area">
+            <div class="form-card">
+                <h2>REVIEW & SUBMIT APPLICATION</h2>
+
+                <div class="review-section">
+                    <h3>Personal Information</h3>
+                    <div class="review-item"><strong>Legal Name:</strong> <span id="review-legal-name">{{ personal_info.get('first_name', '') }} {{ personal_info.get('middle_initial', '') }} {{ personal_info.get('last_name', '') }}</span></div>
+                    <div class="review-item"><strong>Date of Birth:</strong> <span id="review-dob">{{ personal_info.get('dob', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Contact Information:</strong> <span id="review-contact">{{ personal_info.get('contact', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Citizenship Status:</strong> <span id="review-citizenship">{{ personal_info.get('citizenship', '[Not provided]') }}</span></div>
+                    {% if personal_info.get('citizenship') == 'us_citizen' %}
+                    <div class="review-item"><strong>Address:</strong> <span>{{ personal_info.get('street_address', '') }}, {{ personal_info.get('city', '') }}, {{ personal_info.get('state', '') }} {{ personal_info.get('zipcode', '') }}</span></div>
+                    {% endif %}
+                    <div class="review-item"><strong>Phone Number:</strong> <span>{{ personal_info.get('phone_number', '[Not provided]') }}</span></div>
+                </div>
+
+                <div class="review-section">
+                    <h3>Financial Information</h3>
+                    <div class="review-item"><strong>Annual Household Income:</strong> <span id="review-income">${{ financial_info.get('household_income', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Financial Aid Requested:</strong> <span id="review-aid">{{ 'Yes' if financial_info.get('financial_aid') == 'yes' else 'No' }}</span></div>
+                    {% if financial_info.get('financial_aid') == 'yes' %}
+                    <div class="review-item"><strong>Requested Aid Amount:</strong> <span>${{ financial_info.get('aid_amount', '[Not provided]') }}</span></div>
+                    {% endif %}
+                    <div class="review-item"><strong>Current Employment:</strong> <span id="review-employment">{{ financial_info.get('employment', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Volunteer/Work Experience:</strong> <span id="review-volunteer">{{ financial_info.get('volunteer_work', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Assets and Savings:</strong> <span id="review-assets">{{ financial_info.get('assets', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Expenses:</strong> <span id="review-expenses">{{ financial_info.get('expenses', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Additional Financial Notes:</strong> <span id="review-financial-notes">{{ financial_info.get('financial_notes', '[Not provided]') }}</span></div>
+                </div>
+
+                <div class="review-section">
+                    <h3>Parental Income Information</h3>
+                    <div class="review-item"><strong>Parent/Guardian Name:</strong> <span id="review-parent-name">{{ parental_info.get('guardian_first_name', '') }} {{ parental_info.get('guardian_middle_initial', '') }} {{ parental_info.get('guardian_last_name', '') }}</span></div>
+                    <div class="review-item"><strong>Relationship:</strong> <span id="review-relationship">{{ parental_info.get('guardian_relationship', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Total Parental Income:</strong> <span id="review-parental-income">${{ parental_info.get('parent_income', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Parental Employment:</strong> <span id="review-parental-employment">{{ parental_info.get('employment_details', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Source of Support:</strong> <span id="review-support">{{ parental_info.get('support_source', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Household Size:</strong> <span id="review-household">{{ parental_info.get('household_size', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Additional Parental Notes:</strong> <span id="review-parental-notes">{{ parental_info.get('income_notes', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Supporting Documents:</strong> <span>{{ parental_info.get('income_documents_filename', '[No documents uploaded]') }}</span></div>
+                </div>
+
+                <div class="review-section">
+                    <h3>Academic History</h3>
+                    <div class="review-item"><strong>School Name:</strong> <span>{{ academic_info.get('school_name', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>GPA:</strong> <span>{{ academic_info.get('gpa', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Academic Notes:</strong> <span>{{ academic_info.get('academic_notes', '[Not provided]') }}</span></div>
+                    <div class="review-item"><strong>Supporting Documents:</strong> <span>{{ academic_info.get('transcript_filename', '[No documents uploaded]') }}</span></div>
+                </div>
+
+                <div class="review-section">
+                    <h3>Major/Minor Selection</h3>
+                    <div class="review-item"><strong>Major:</strong> <span id="review-major">{{ major_info.get('major_choice', '[Not selected]') }}</span></div>
+                    <div class="review-item"><strong>Minor:</strong> <span id="review-minor">{{ major_info.get('minor_choice', '[Not selected]') }}</span></div>
+                    <div class="review-item"><strong>Additional Notes:</strong> <span id="review-major-notes">{{ major_info.get('major_comments', '[No additional notes]') }}</span></div>
+                </div>
+
+                <div class="review-section">
+                    <h3>Additional Information</h3>
+                    <div class="review-item"><strong>Additional Information:</strong> <span>{{ additional_info.get('additional_info_text', '[No additional information provided]') }}</span></div>
+                </div>
+
+                <div class="review-section">
+                    <h3>Additional Information</h3>
+                    <div class="review-item"><strong>Additional Comments:</strong> <span id="review-additional">[No additional information provided]</span></div>
+                </div>
+
+                <form method="POST" action="{{ url_for('views.review_and_submit') }}">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="confirm-submit" name="confirmSubmit" required> I confirm that all information provided is accurate and complete.
+                        </label>
+                    </div>
+
+                    <!-- NAV BUTTONS -->
+                    <div class="nav-buttons">
+                        <a class="btn" href="{{ url_for('views.additional_info') }}">← Previous</a>
+                        <button id="submitApplicationButton" class="btn submit-btn" type="submit" disabled>Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const confirmCheckbox = document.getElementById('confirm-submit');
+    const submitButton = document.getElementById('submitApplicationButton');
+
+    if (confirmCheckbox && submitButton) {
+        confirmCheckbox.addEventListener('change', function() {
+            submitButton.disabled = !confirmCheckbox.checked;
+        });
+    }
+</script>
+</body>
+</html>

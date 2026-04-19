@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>University Application</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        width: 95%;
+        margin: 20px auto;
+        border: 2px dashed #ccc;
+        padding: 20px;
+        background-color: white;
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-size: 40px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .title {
+        text-align: center;
+        flex: 1;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .login {
+        font-size: 14px;
+        text-decoration: none;
+        background: red;
+        color: black;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* PROGRESS BAR */
+    .progress {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+        align-items: center;
+    }
+
+    .step {
+        text-align: center;
+        flex: 1;
+        position: relative;
+    }
+
+    .circle {
+        width: 15px;
+        height: 15px;
+        background: black;
+        border-radius: 50%;
+        margin: auto;
+    }
+
+    .step:first-child .circle {
+        background: red;
+    }
+
+    .step p {
+        font-size: 12px;
+    }
+
+    /* LAYOUT */
+    .main {
+        display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar button {
+        width: 100%;
+        background: red;
+        color: black;
+        border: 2px solid black;
+        padding: 15px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* FORM */
+    .form-area {
+        flex: 1;
+        padding: 0 40px;
+    }
+
+    .form-card {
+        border: 2px solid #444;
+        border-radius: 8px;
+        padding: 24px;
+        max-width: 520px;
+        margin: 0 auto;
+        background: #fafafa;
+    }
+
+    .form-card h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .name-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .name-field {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .hidden-section {
+        display: none;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #999;
+        border-radius: 5px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    /* NAV BUTTONS */
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+
+    .btn {
+        border: 3px solid black;
+        padding: 15px 30px;
+        background: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .next {
+        display: flex;
+        align-items: center;
+    }
+
+    .arrow {
+        margin-left: 10px;
+        font-size: 18px;
+    }
+
+    .alert {
+        padding: 16px 20px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        margin: 20px 0;
+        position: relative;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    .alert-dismissible .close {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        color: inherit;
+    }
+
+    .alert-dismissible .close:hover {
+        opacity: 0.75;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">SCSU</div>
+        <div class="title">University Application</div>
+        <a class="login" href="{{ url_for('auth.login') }}">Log-in/Sign-up</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert {% if category == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" aria-label="Close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- PROGRESS -->
+    <div class="progress">
+
+        <div class="step"><div class="circle"></div><p>Personal Information</p></div>
+        <div class="step"><div class="circle"></div><p>Finances</p></div>
+        <div class="step"><div class="circle"></div><p>Academic History</p></div>
+        <div class="step"><div class="circle"></div><p>Parental Income</p></div>
+        <div class="step"><div class="circle"></div><p>Major</p></div>
+        <div class="step"><div class="circle"></div><p>Additional Information</p></div>
+        <div class="step"><div class="circle"></div><p>Review & Submit</p></div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <button>University Application</button>
+            <button>Registration Status</button>
+            <button>Information</button>
+            <button>Staff Inquiries</button>
+        </div>
+
+        <!-- FORM -->
+        <div class="form-area">
+            <form method="POST" action="{{ url_for('views.home') }}">
+                <div class="form-card">
+                    <h2>PERSONAL INFORMATION</h2>
+
+                    <div class="form-group name-row">
+                        <div class="name-field">
+                            <label for="firstName">First Name <span style="color: red;">*</span></label>
+                            <input id="firstName" name="firstName" type="text" minlength="2" maxlength="50" required placeholder="First name" value="{{ personal_info.get('first_name', '') }}">
+                        </div>
+                        <div class="name-field">
+                            <label for="middleInitial">Middle Initial</label>
+                            <input id="middleInitial" name="middleInitial" type="text" maxlength="1" placeholder="M" value="{{ personal_info.get('middle_initial', '') }}">
+                        </div>
+                        <div class="name-field">
+                            <label for="lastName">Last Name <span style="color: red;">*</span></label>
+                            <input id="lastName" name="lastName" type="text" minlength="2" maxlength="50" required placeholder="Last name" value="{{ personal_info.get('last_name', '') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth<span style="color: red;">*</span></label>
+                        <input id="dob" name="dob" type="date" required min="1900-01-01" max="2026-04-13" value="{{ personal_info.get('dob', '') }}">
+                    </div>
+
+                    
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number<span style="color: red;">*</span></label>
+                        <input id="phoneNumber" name="phoneNumber" type="tel" required placeholder="Current phone number" value="{{ personal_info.get('phone_number', '') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact">Email Address<span style="color: red;">*</span></label>
+                        <input id="contact" name="contact" type="email" required placeholder="Current email address" value="{{ personal_info.get('contact', '') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="citizenship">Do you have U.S. Citizenship or Permanent Residency?<span style="color: red;">*</span></label>
+                        <select id="citizenship" name="citizenship" type="text" required placeholder="Country of citizenship and residency status">
+                            <option value="">Select an option</option>
+                            <option value="us_citizen" {% if personal_info.get('citizenship') == 'us_citizen' %}selected{% endif %}>U.S. Citizen</option>
+                            <option value="permanent_resident" {% if personal_info.get('citizenship') == 'permanent_resident' %}selected{% endif %}>Permanent Resident</option>
+                            <option value="international" {% if personal_info.get('citizenship') == 'international' %}selected{% endif %}>International Student</option>
+                            <option value="other" {% if personal_info.get('citizenship') == 'other' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                    
+                    <div id="addressSection" class="form-group {% if personal_info.get('citizenship') != 'us_citizen' %}hidden-section{% endif %}">
+                        <div class="form-group">
+                            <label for="streetAddress">Street Address<span style="color: red;">*</span></label>
+                            <input id="streetAddress" name="streetAddress" type="text" minlength="5" maxlength="100" {% if personal_info.get('citizenship') == 'us_citizen' %}required{% endif %} {% if personal_info.get('citizenship') != 'us_citizen' %}disabled{% endif %} placeholder="Street address" value="{{ personal_info.get('street_address', '') }}">
+                        </div>
+                        <div class="name-row">
+                            <div class="name-field">
+                                <label for="state">State<span style="color: red;">*</span></label>
+                                <select id="state" name="state" type="text" {% if personal_info.get('citizenship') == 'us_citizen' %}required{% endif %} {% if personal_info.get('citizenship') != 'us_citizen' %}disabled{% endif %} placeholder="State of residence">
+                                    <option value="">Select an option</option>
+                                    <option value="address1" {% if personal_info.get('state') == 'address1' %}selected{% endif %}>Minnesota</option>
+                                    <option value="address2" {% if personal_info.get('state') == 'address2' %}selected{% endif %}>Wisconsin</option>
+                                    <option value="address3" {% if personal_info.get('state') == 'address3' %}selected{% endif %}>Iowa</option>
+                                    <option value="address4" {% if personal_info.get('state') == 'address4' %}selected{% endif %}>North Dakota</option>
+                                </select>
+                            </div>
+                            <div class="name-field">
+                                <label for="City">City<span style="color: red;">*</span></label>
+                                <input id="City" name="City" type="text" minlength="2" maxlength="50" {% if personal_info.get('citizenship') == 'us_citizen' %}required{% endif %} {% if personal_info.get('citizenship') != 'us_citizen' %}disabled{% endif %} placeholder="City" value="{{ personal_info.get('city', '') }}">
+                            </div>
+                            <div class="name-field">
+                                <label for="zipCode">Zip Code<span style="color: red;">*</span></label>
+                                <input id="zipCode" name="zipCode" type="text" minlength="5" maxlength="5" {% if personal_info.get('citizenship') == 'us_citizen' %}required{% endif %} {% if personal_info.get('citizenship') != 'us_citizen' %}disabled{% endif %} placeholder="Zip code" value="{{ personal_info.get('zipcode', '') }}">
+                            </div>
+                        </div>
+                    </div>
+                
+
+                    <!-- NAV BUTTONS -->
+                    <div class="nav-buttons">
+                        <button class="btn" type="button">← Previous</button>
+                        <button class="btn next" type="submit">Next <span class="arrow">→</span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('close')) {
+            var alert = event.target.closest('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }
+    });
+
+    function updateAddressSection() {
+        var citizenship = document.getElementById('citizenship');
+        var addressSection = document.getElementById('addressSection');
+        var addressFields = addressSection.querySelectorAll('select, input');
+
+        if (citizenship && citizenship.value === 'us_citizen') {
+            addressSection.classList.remove('hidden-section');
+            addressFields.forEach(function(field) {
+                field.disabled = false;
+            });
+        } else {
+            addressSection.classList.add('hidden-section');
+            addressFields.forEach(function(field) {
+                field.disabled = true;
+                if (field.type !== 'select-one') {
+                    field.value = '';
+                } else {
+                    field.selectedIndex = 0;
+                }
+            });
+        }
+    }
+
+    var citizenshipInput = document.getElementById('citizenship');
+    if (citizenshipInput) {
+        citizenshipInput.addEventListener('change', updateAddressSection);
+        updateAddressSection();
+    }
+</script>
+
+</body>
+</html>

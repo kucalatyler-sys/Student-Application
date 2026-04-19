@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>University Application</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        width: 95%;
+        margin: 20px auto;
+        border: 2px dashed #ccc;
+        padding: 20px;
+        background-color: white;
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-size: 40px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .title {
+        text-align: center;
+        flex: 1;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .login {
+        font-size: 14px;
+        text-decoration: none;
+        background: red;
+        color: black;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* PROGRESS BAR */
+    .progress {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+        align-items: center;
+    }
+
+    .step {
+        text-align: center;
+        flex: 1;
+        position: relative;
+    }
+
+    .circle {
+        width: 15px;
+        height: 15px;
+        background: black;
+        border-radius: 50%;
+        margin: auto;
+    }
+
+    .step:first-child .circle,
+    .step.active .circle {
+        background: red;
+    }
+
+    .step p {
+        font-size: 12px;
+    }
+
+    /* LAYOUT */
+    .main {
+        display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar button {
+        width: 100%;
+        background: red;
+        color: black;
+        border: 2px solid black;
+        padding: 15px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* FORM */
+    .form-area {
+        flex: 1;
+        padding: 0 40px;
+    }
+
+    .form-card {
+        border: 2px solid #444;
+        border-radius: 8px;
+        padding: 24px;
+        max-width: 520px;
+        margin: 0 auto;
+        background: #fafafa;
+    }
+
+    .form-card h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #999;
+        border-radius: 5px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    /* NAV BUTTONS */
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+
+    .btn {
+        border: 3px solid black;
+        padding: 15px 30px;
+        background: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .next {
+        display: flex;
+        align-items: center;
+    }
+
+    .arrow {
+        margin-left: 10px;
+        font-size: 18px;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">CST</div>
+        <div class="title">University Application</div>
+        <a class="login" href="{{ url_for('auth.login') }}">Log-in/Sign-up</a>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress">
+
+        <div class="step"><div class="circle"></div><p>Personal Information</p></div>
+        <div class="step active"><div class="circle"></div><p>Finances</p></div>
+        <div class="step active"><div class="circle"></div><p>Academic History</p></div>
+        <div class="step active"><div class="circle"></div><p>Parental Income</p></div>
+        <div class="step active"><div class="circle"></div><p>Major</p></div>
+        <div class="step active"><div class="circle"></div><p>Additional Information</p></div>
+        <div class="step"><div class="circle"></div><p>Review & Submit</p></div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <button>University Application</button>
+            <button>Registration Status</button>
+            <button>Information</button>
+            <button>Staff Inquiries</button>
+        </div>
+
+        <!-- FORM -->
+        <div class="form-area">
+            <form method="POST" action="{{ url_for('views.additional_info') }}">
+                <div class="form-card">
+                    <h2>ADDITIONAL INFORMATION</h2>
+
+                    <div class="form-group">
+                        <label>Additional Information</label>
+                        <textarea name="additionalInfo" placeholder="Please provide any additional information you would like to share with the admissions committee">{{ additional_info.get('additional_info_text', '') }}</textarea>
+                    </div>
+
+                    <!-- NAV BUTTONS -->
+                    <div class="nav-buttons">
+                        <a class="btn" href="{{ url_for('views.major') }}">← Previous</a>
+                        <button type="submit" class="btn next">Next <span class="arrow">→</span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

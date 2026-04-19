@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .sign-up-page {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .sign-up-page h3 {
+            margin: 0 0 32px;
+            font-size: 32px;
+            text-align: center;
+            color: #1a1a1a;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d8dbe9;
+            border-radius: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #f8f9ff;
+            color: #1a1a1a;
+        }
+        .form-control::placeholder {
+            color: #8a94a6;
+        }
+        .btn {
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-primary {
+            background: #0066ff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0051d4;
+        }
+        .alert {
+            padding: 16px 20px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            margin: 20px 0;
+            position: relative;
+            font-size: 14px;
+        }
+        .alert-success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .alert-dismissible .close {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: inherit;
+        }
+        .alert-dismissible .close:hover {
+            opacity: 0.75;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert {% if category == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" aria-label="Close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="sign-up-page">
+        <form method="POST">
+            <h3 align="center">Sign Up</h3>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="Enter email"
+                />
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="Enter first name"
+                />
+            </div>
+            <div class="form-group">
+                <label for="password1">Password</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password1"
+                    name="password1"
+                    placeholder="Enter password"
+                />
+            </div>
+            <div class="form-group">
+                <label for="password2">Password (Confirm)</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password2"
+                    name="password2"
+                    placeholder="Confirm password"
+                />
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('close')) {
+                var alert = event.target.closest('.alert');
+                if (alert) {
+                    alert.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
