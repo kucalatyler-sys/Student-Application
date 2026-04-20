@@ -3,191 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Application Review</title>
+<title>Admin Application Verification</title>
 <style>
-	body {
-		margin: 0;
-		font-family: Arial, sans-serif;
-		background: #f2f4f8;
-		color: #1f2937;
-	}
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f2f4f8;
+        color: #1f2937;
+    }
 
-	.page {
-		max-width: 1100px;
-		margin: 24px auto;
-		padding: 0 16px;
-	}
+    .page {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 16px;
+    }
 
-	.header {
-		background: #ffffff;
-		border: 1px solid #d1d5db;
-		border-radius: 10px;
-		padding: 20px;
-		margin-bottom: 18px;
-	}
+    .header {
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 18px;
+    }
 
-	.header h1 {
-		margin: 0;
-		font-size: 28px;
-	}
+    .header h1 {
+        margin: 0;
+        font-size: 28px;
+    }
 
-	.header p {
-		margin: 8px 0 0;
-		color: #4b5563;
-	}
+    .meta {
+        margin-top: 10px;
+        color: #4b5563;
+        font-size: 14px;
+    }
 
-	.summary {
-		margin-top: 14px;
-		font-weight: bold;
-		color: #111827;
-	}
+    .badge {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #e5f4ff;
+        color: #0b5ed7;
+        font-size: 12px;
+        font-weight: bold;
+    }
 
-	.card {
-		background: #ffffff;
-		border: 1px solid #d1d5db;
-		border-radius: 10px;
-		padding: 18px;
-		margin-bottom: 16px;
-	}
+    .back-link {
+        display: inline-block;
+        margin-top: 14px;
+        text-decoration: none;
+        color: #111827;
+        font-weight: bold;
+    }
 
-	.card-top {
-		display: flex;
-		justify-content: space-between;
-		gap: 12px;
-		flex-wrap: wrap;
-		border-bottom: 1px solid #e5e7eb;
-		padding-bottom: 10px;
-		margin-bottom: 12px;
-	}
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 12px;
+    }
 
-	.badge {
-		display: inline-block;
-		padding: 4px 10px;
-		border-radius: 999px;
-		background: #e5f4ff;
-		color: #0b5ed7;
-		font-size: 12px;
-		font-weight: bold;
-	}
+    .section {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 14px;
+    }
 
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 12px;
-	}
+    .section h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #111827;
+    }
 
-	.section {
-		border: 1px solid #e5e7eb;
-		border-radius: 8px;
-		padding: 12px;
-		background: #fbfdff;
-	}
+    .item {
+        margin-bottom: 7px;
+        font-size: 14px;
+    }
 
-	.section h3 {
-		margin-top: 0;
-		margin-bottom: 8px;
-		font-size: 16px;
-		color: #111827;
-	}
-
-	.item {
-		margin-bottom: 6px;
-		font-size: 14px;
-	}
-
-	.item strong {
-		color: #111827;
-	}
-
-	.empty-state {
-		background: #ffffff;
-		border: 1px dashed #9ca3af;
-		border-radius: 10px;
-		padding: 24px;
-		text-align: center;
-		color: #4b5563;
-	}
+    .item strong {
+        color: #111827;
+    }
 </style>
 </head>
 <body>
-
 <div class="page">
-	<div class="header">
-		<h1>Admin Review Dashboard</h1>
-		<p>Review all application packets submitted by students.</p>
-		<div class="summary">Total Submitted: {{ applications|length }}</div>
-	</div>
+    <div class="header">
+        <h1>Application #{{ application.id }}</h1>
+        <div class="meta">Submitted: {{ application.submitted_at }}</div>
+        <span class="badge">{{ application.status }}</span><br>
+        <a class="back-link" href="{{ url_for('views.admin_review_applications') }}">&larr; Back to Application List</a>
+    </div>
 
-	{% if applications %}
-		{% for application in applications %}
-			<div class="card">
-				<div class="card-top">
-					<div>
-						<strong>Application #{{ application.id }}</strong><br>
-						Submitted: {{ application.submitted_at }}
-					</div>
-					<span class="badge">{{ application.status }}</span>
-				</div>
+    <div class="grid">
+        <div class="section">
+            <h3>Personal Information</h3>
+            <div class="item"><strong>Name:</strong> {{ application.data.personal_info.get('first_name', '') }} {{ application.data.personal_info.get('middle_initial', '') }} {{ application.data.personal_info.get('last_name', '') }}</div>
+            <div class="item"><strong>Date of Birth:</strong> {{ application.data.personal_info.get('dob', 'N/A') }}</div>
+            <div class="item"><strong>Contact:</strong> {{ application.data.personal_info.get('contact', 'N/A') }}</div>
+            <div class="item"><strong>Phone:</strong> {{ application.data.personal_info.get('phone_number', 'N/A') }}</div>
+            <div class="item"><strong>Citizenship:</strong> {{ application.data.personal_info.get('citizenship', 'N/A') }}</div>
+            <div class="item"><strong>Address:</strong> {{ application.data.personal_info.get('street_address', '') }} {{ application.data.personal_info.get('city', '') }} {{ application.data.personal_info.get('state', '') }} {{ application.data.personal_info.get('zipcode', '') }}</div>
+        </div>
 
-				<div class="grid">
-					<div class="section">
-						<h3>Personal Information</h3>
-						<div class="item"><strong>Name:</strong> {{ application.data.personal_info.get('first_name', '') }} {{ application.data.personal_info.get('middle_initial', '') }} {{ application.data.personal_info.get('last_name', '') }}</div>
-						<div class="item"><strong>Date of Birth:</strong> {{ application.data.personal_info.get('dob', 'N/A') }}</div>
-						<div class="item"><strong>Contact:</strong> {{ application.data.personal_info.get('contact', 'N/A') }}</div>
-						<div class="item"><strong>Phone:</strong> {{ application.data.personal_info.get('phone_number', 'N/A') }}</div>
-						<div class="item"><strong>Citizenship:</strong> {{ application.data.personal_info.get('citizenship', 'N/A') }}</div>
-						<div class="item"><strong>Address:</strong> {{ application.data.personal_info.get('street_address', '') }} {{ application.data.personal_info.get('city', '') }} {{ application.data.personal_info.get('state', '') }} {{ application.data.personal_info.get('zipcode', '') }}</div>
-					</div>
+        <div class="section">
+            <h3>Financial Information</h3>
+            <div class="item"><strong>Household Income:</strong> {{ application.data.financial_info.get('household_income', 'N/A') }}</div>
+            <div class="item"><strong>Financial Aid:</strong> {{ application.data.financial_info.get('financial_aid', 'N/A') }}</div>
+            <div class="item"><strong>Aid Amount:</strong> {{ application.data.financial_info.get('aid_amount', 'N/A') }}</div>
+            <div class="item"><strong>Employment:</strong> {{ application.data.financial_info.get('employment', 'N/A') }}</div>
+            <div class="item"><strong>Volunteer Work:</strong> {{ application.data.financial_info.get('volunteer_work', 'N/A') }}</div>
+            <div class="item"><strong>Assets:</strong> {{ application.data.financial_info.get('assets', 'N/A') }}</div>
+            <div class="item"><strong>Expenses:</strong> {{ application.data.financial_info.get('expenses', 'N/A') }}</div>
+            <div class="item"><strong>Notes:</strong> {{ application.data.financial_info.get('financial_notes', 'N/A') }}</div>
+        </div>
 
-					<div class="section">
-						<h3>Financial Information</h3>
-						<div class="item"><strong>Household Income:</strong> {{ application.data.financial_info.get('household_income', 'N/A') }}</div>
-						<div class="item"><strong>Financial Aid:</strong> {{ application.data.financial_info.get('financial_aid', 'N/A') }}</div>
-						<div class="item"><strong>Aid Amount:</strong> {{ application.data.financial_info.get('aid_amount', 'N/A') }}</div>
-						<div class="item"><strong>Employment:</strong> {{ application.data.financial_info.get('employment', 'N/A') }}</div>
-						<div class="item"><strong>Volunteer Work:</strong> {{ application.data.financial_info.get('volunteer_work', 'N/A') }}</div>
-						<div class="item"><strong>Assets:</strong> {{ application.data.financial_info.get('assets', 'N/A') }}</div>
-						<div class="item"><strong>Expenses:</strong> {{ application.data.financial_info.get('expenses', 'N/A') }}</div>
-					</div>
+        <div class="section">
+            <h3>Academic History</h3>
+            <div class="item"><strong>School:</strong> {{ application.data.academic_info.get('school_name', 'N/A') }}</div>
+            <div class="item"><strong>GPA:</strong> {{ application.data.academic_info.get('gpa', 'N/A') }}</div>
+            <div class="item"><strong>Notes:</strong> {{ application.data.academic_info.get('academic_notes', 'N/A') }}</div>
+            <div class="item"><strong>Transcript:</strong> {{ application.data.academic_info.get('transcript_filename', 'N/A') }}</div>
+        </div>
 
-					<div class="section">
-						<h3>Academic History</h3>
-						<div class="item"><strong>School:</strong> {{ application.data.academic_info.get('school_name', 'N/A') }}</div>
-						<div class="item"><strong>GPA:</strong> {{ application.data.academic_info.get('gpa', 'N/A') }}</div>
-						<div class="item"><strong>Notes:</strong> {{ application.data.academic_info.get('academic_notes', 'N/A') }}</div>
-						<div class="item"><strong>Transcript:</strong> {{ application.data.academic_info.get('transcript_filename', 'N/A') }}</div>
-					</div>
+        <div class="section">
+            <h3>Parental Income</h3>
+            <div class="item"><strong>Guardian Name:</strong> {{ application.data.parental_info.get('guardian_first_name', '') }} {{ application.data.parental_info.get('guardian_middle_initial', '') }} {{ application.data.parental_info.get('guardian_last_name', '') }}</div>
+            <div class="item"><strong>Relationship:</strong> {{ application.data.parental_info.get('guardian_relationship', 'N/A') }}</div>
+            <div class="item"><strong>Parent Income:</strong> {{ application.data.parental_info.get('parent_income', 'N/A') }}</div>
+            <div class="item"><strong>Employment:</strong> {{ application.data.parental_info.get('employment_details', 'N/A') }}</div>
+            <div class="item"><strong>Support Source:</strong> {{ application.data.parental_info.get('support_source', 'N/A') }}</div>
+            <div class="item"><strong>Household Size:</strong> {{ application.data.parental_info.get('household_size', 'N/A') }}</div>
+            <div class="item"><strong>Notes:</strong> {{ application.data.parental_info.get('income_notes', 'N/A') }}</div>
+        </div>
 
-					<div class="section">
-						<h3>Parental Income</h3>
-						<div class="item"><strong>Guardian Name:</strong> {{ application.data.parental_info.get('guardian_first_name', '') }} {{ application.data.parental_info.get('guardian_middle_initial', '') }} {{ application.data.parental_info.get('guardian_last_name', '') }}</div>
-						<div class="item"><strong>Relationship:</strong> {{ application.data.parental_info.get('guardian_relationship', 'N/A') }}</div>
-						<div class="item"><strong>Parent Income:</strong> {{ application.data.parental_info.get('parent_income', 'N/A') }}</div>
-						<div class="item"><strong>Support Source:</strong> {{ application.data.parental_info.get('support_source', 'N/A') }}</div>
-						<div class="item"><strong>Household Size:</strong> {{ application.data.parental_info.get('household_size', 'N/A') }}</div>
-					</div>
+        <div class="section">
+            <h3>Program Selection</h3>
+            <div class="item"><strong>Major:</strong> {{ application.data.major_info.get('major_choice', 'N/A') }}</div>
+            <div class="item"><strong>Minor:</strong> {{ application.data.major_info.get('minor_choice', 'N/A') }}</div>
+            <div class="item"><strong>Major Notes:</strong> {{ application.data.major_info.get('major_comments', 'N/A') }}</div>
+        </div>
 
-					<div class="section">
-						<h3>Program Selection</h3>
-						<div class="item"><strong>Major:</strong> {{ application.data.major_info.get('major_choice', 'N/A') }}</div>
-						<div class="item"><strong>Minor:</strong> {{ application.data.major_info.get('minor_choice', 'N/A') }}</div>
-						<div class="item"><strong>Major Notes:</strong> {{ application.data.major_info.get('major_comments', 'N/A') }}</div>
-					</div>
-
-					<div class="section">
-						<h3>Additional Information</h3>
-						<div class="item">{{ application.data.additional_info.get('additional_info_text', 'No additional information provided.') }}</div>
-					</div>
-				</div>
-			</div>
-		{% endfor %}
-	{% else %}
-		<div class="empty-state">
-			No applications have been submitted yet.
-		</div>
-	{% endif %}
+        <div class="section">
+            <h3>Additional Information</h3>
+            <div class="item">{{ application.data.additional_info.get('additional_info_text', 'No additional information provided.') }}</div>
+        </div>
+    </div>
 </div>
-
 </body>
 </html>

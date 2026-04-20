@@ -1,1 +1,275 @@
-{% extends "base.html" %} {% block title %}Changed{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Status</title>
+<style>
+    :root {
+        --page-bg: #eef2f7;
+        --panel-bg: #ffffff;
+        --panel-soft: #f7fafc;
+        --text-main: #111827;
+        --text-muted: #4b5563;
+        --brand-red: #d60000;
+        --brand-dark: #111827;
+        --line: #d1d5db;
+        --status-bg: #ecf8f0;
+        --status-border: #86d8a5;
+        --status-text: #14532d;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: radial-gradient(circle at top right, #ffffff 0%, var(--page-bg) 55%);
+        color: var(--text-main);
+    }
+
+    .container {
+        width: 95%;
+        margin: 24px auto;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px;
+        background-color: var(--panel-bg);
+        box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 40px;
+        font-weight: bold;
+        color: var(--brand-red);
+    }
+
+    .title {
+        text-align: center;
+        flex: 1;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .login {
+        font-size: 14px;
+        text-decoration: none;
+        background: var(--brand-red);
+        color: #ffffff;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .cheat {
+        font-size: 14px;
+        text-decoration: none;
+        background: var(--brand-dark);
+        color: white;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .login:hover,
+    .cheat:hover,
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+
+    .main {
+        display: flex;
+        gap: 22px;
+        align-items: flex-start;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar button {
+        width: 100%;
+        background: var(--brand-red);
+        color: #ffffff;
+        border: 2px solid black;
+        padding: 15px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* STATUS CONTENT */
+    .form-area {
+        flex: 1;
+        padding: 0;
+    }
+
+    .form-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 28px;
+        max-width: 680px;
+        background: linear-gradient(180deg, #ffffff 0%, var(--panel-soft) 100%);
+    }
+
+    .form-card h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 27px;
+        letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+        margin: 0 0 22px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    .status {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid var(--status-border);
+        background: var(--status-bg);
+        color: var(--status-text);
+        font-weight: bold;
+    }
+
+    .status strong {
+        margin-right: 8px;
+    }
+
+    .empty {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px dashed #9ca3af;
+        background: #ffffff;
+        color: var(--text-muted);
+        font-weight: bold;
+    }
+
+    .btn-row {
+        margin-top: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--brand-dark);
+        color: #ffffff;
+        padding: 12px 18px;
+        border-radius: 8px;
+        border: 1px solid var(--brand-dark);
+        font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    @media (max-width: 900px) {
+        .main {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .sidebar button {
+            margin-bottom: 0;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .header {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .title {
+            order: 3;
+            flex-basis: 100%;
+            text-align: left;
+        }
+
+        .form-card {
+            padding: 20px;
+        }
+
+        .sidebar {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">SCSU</div>
+        <div class="title">Registration Status</div>
+        <div class="header-actions">
+            <a class="cheat" href="{{ url_for('views.admin_review_applications') }}">Cheat</a>
+            <a class="login" href="{{ url_for('auth.login') }}">Log-in/Sign-up</a>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <a href="{{ url_for('views.start_application') }}"><button type="button">University Application</button></a>
+            <a href="{{ url_for('views.home') }}"><button type="button">Registration Status</button></a>
+            <a href="{{ url_for('views.information') }}"><button type="button">Information</button></a>
+            <a href="{{ url_for('views.staff_inquiries') }}"><button type="button">Staff Inquiries</button></a>
+        </div>
+
+        <div class="form-area">
+            <div class="form-card">
+                <h2>Application Status</h2>
+                <p class="subtitle">Check your latest submission and continue to a new application when you are ready.</p>
+
+                {% if has_submitted_application %}
+                    <div class="status">
+                        <strong>Submitted:</strong> Application #{{ latest_application.id }} on {{ latest_application.submitted_at }}
+                    </div>
+                {% else %}
+                    <div class="empty">No application has been submitted yet.</div>
+                {% endif %}
+
+                <div class="btn-row">
+                    {% if has_submitted_application %}
+                        <a class="btn" href="{{ url_for('views.start_application') }}">Start New Application Process</a>
+                    {% else %}
+                        <a class="btn" href="{{ url_for('views.start_application') }}">Start Application Process</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

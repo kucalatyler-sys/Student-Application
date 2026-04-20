@@ -1,10 +1,33 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from .modles import save_submitted_application, get_submitted_applications
+from .modles import (
+    save_submitted_application,
+    get_submitted_applications,
+    get_submitted_application_by_id,
+)
 
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET', 'POST'])
+
+def is_pdf_file(file_obj):
+    if not file_obj or not file_obj.filename:
+        return False
+    return file_obj.filename.lower().endswith('.pdf')
+
+@views.route('/', methods=['GET'])
 def home():
+    applications = get_submitted_applications()
+    has_submitted_application = len(applications) > 0
+    latest_application = applications[0] if has_submitted_application else None
+
+    return render_template(
+        'home.html',
+        has_submitted_application=has_submitted_application,
+        latest_application=latest_application,
+    )
+
+
+@views.route('/start-application', methods=['GET', 'POST'])
+def start_application():
     if request.method == 'POST':
         first_name = request.form.get('firstName', '').strip()
         middle_initial = request.form.get('middleInitial', '').strip()
@@ -27,7 +50,7 @@ def home():
 
         if not all(required_fields):
             flash('Please fill out all required fields before continuing.', category='error')
-            return render_template('home.html')
+            return render_template('base.html', personal_info=session.get('personal_info', {}))
 
         # Store personal information in session
         session['personal_info'] = {
@@ -48,7 +71,7 @@ def home():
 
     # Pre-populate form with session data
     personal_info = session.get('personal_info', {})
-    return render_template('home.html', personal_info=personal_info)
+    return render_template('base.html', personal_info=personal_info)
 
 @views.route('/financial', methods=['GET', 'POST'])
 def financial():
@@ -101,6 +124,10 @@ def academic_history():
             flash('Please fill out all required academic fields and upload your transcript.', category='error')
             return render_template('academic_history.html')
 
+        if not is_pdf_file(transcript):
+            flash('Transcript upload must be a PDF file (.pdf).', category='error')
+            return render_template('academic_history.html', academic_info=session.get('academic_info', {}))
+
         # Store academic information in session
         session['academic_info'] = {
             'school_name': school_name,
@@ -132,6 +159,10 @@ def income():
         if not all([guardianfirst_name, guardianmiddle_initial, guardianlast_name, guardian_relationship, parent_income, employment_details, support_source, household_size, income_notes]) or not income_documents or income_documents.filename == '':
             flash('Please fill out all required parental income fields and upload your documents.', category='error')
             return render_template('income.html')
+
+        if not is_pdf_file(income_documents):
+            flash('Guardian income document upload must be a PDF file (.pdf).', category='error')
+            return render_template('income.html', parental_info=session.get('parental_info', {}))
 
         # Store parental income information in session
         session['parental_info'] = {
@@ -239,6 +270,26 @@ def review_and_submit():
 @views.route('/admin/review-applications', methods=['GET'])
 def admin_review_applications():
     applications = get_submitted_applications()
-    return render_template('admin_verification.html', applications=applications)
+    return render_template('admin_list.html', applications=applications)
+
+
+@views.route('/admin/review-applications/<int:application_id>', methods=['GET'])
+def admin_verification(application_id):
+    application = get_submitted_application_by_id(application_id)
+    if not application:
+        flash('Application not found.', category='error')
+        return redirect(url_for('views.admin_review_applications'))
+
+    return render_template('admin_verification.html', application=application)
+
+
+@views.route('/information', methods=['GET'])
+def information():
+    return render_template('information.html')
+
+
+@views.route('/staff-inquiries', methods=['GET'])
+def staff_inquiries():
+    return render_template('staff_inquiries.html')
 
 

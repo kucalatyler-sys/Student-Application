@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Application List</title>
+<style>
+	body {
+		margin: 0;
+		font-family: Arial, sans-serif;
+		background: #f2f4f8;
+		color: #1f2937;
+	}
+
+	.page {
+		max-width: 1000px;
+		margin: 24px auto;
+		padding: 0 16px;
+	}
+
+	.header {
+		background: #ffffff;
+		border: 1px solid #d1d5db;
+		border-radius: 10px;
+		padding: 20px;
+		margin-bottom: 18px;
+	}
+
+	.header h1 {
+		margin: 0;
+		font-size: 28px;
+	}
+
+	.header p {
+		margin: 8px 0 0;
+		color: #4b5563;
+	}
+
+	.table-wrap {
+		background: #ffffff;
+		border: 1px solid #d1d5db;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	th,
+	td {
+		padding: 12px;
+		text-align: left;
+		border-bottom: 1px solid #e5e7eb;
+		font-size: 14px;
+	}
+
+	th {
+		background: #f9fafb;
+		font-size: 13px;
+		text-transform: uppercase;
+		letter-spacing: 0.4px;
+	}
+
+	.status {
+		display: inline-block;
+		padding: 4px 9px;
+		border-radius: 999px;
+		background: #e5f4ff;
+		color: #0b5ed7;
+		font-weight: bold;
+		font-size: 12px;
+	}
+
+	.view-btn {
+		text-decoration: none;
+		padding: 8px 12px;
+		background: #111827;
+		color: #ffffff;
+		border-radius: 6px;
+		border: 1px solid #111827;
+		font-size: 13px;
+		font-weight: bold;
+	}
+
+	.view-btn:hover {
+		background: #374151;
+		border-color: #374151;
+	}
+
+	.empty-state {
+		background: #ffffff;
+		border: 1px dashed #9ca3af;
+		border-radius: 10px;
+		padding: 24px;
+		text-align: center;
+		color: #4b5563;
+	}
+</style>
+</head>
+<body>
+<div class="page">
+	<div class="header">
+		<h1>Submitted Applications</h1>
+		<p>Select an application to review full details.</p>
+		<p><strong>Total Submitted:</strong> {{ applications|length }}</p>
+	</div>
+
+	{% if applications %}
+		<div class="table-wrap">
+			<table>
+				<thead>
+					<tr>
+						<th>Application ID</th>
+						<th>Student Name</th>
+						<th>Submitted At</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for application in applications %}
+						<tr>
+							<td>#{{ application.id }}</td>
+							<td>{{ application.data.personal_info.get('first_name', '') }} {{ application.data.personal_info.get('last_name', '') }}</td>
+							<td>{{ application.submitted_at }}</td>
+							<td><span class="status">{{ application.status }}</span></td>
+							<td>
+								<a class="view-btn" href="{{ url_for('views.admin_verification', application_id=application.id) }}">View</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class="empty-state">No applications have been submitted yet.</div>
+	{% endif %}
+</div>
+</body>
+</html>

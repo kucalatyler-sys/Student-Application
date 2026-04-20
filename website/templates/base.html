@@ -4,18 +4,35 @@
 <meta charset="UTF-8">
 <title>University Application</title>
 <style>
+        :root {
+        --page-bg: #eef2f7;
+        --panel-bg: #ffffff;
+        --panel-soft: #f7fafc;
+        --text-main: #111827;
+        --text-muted: #4b5563;
+        --brand-red: #d60000;
+        --brand-dark: #111827;
+        --line: #d1d5db;
+        --status-bg: #ecf8f0;
+        --status-border: #86d8a5;
+        --status-text: #14532d;
+    }
+
     body {
         font-family: Arial, sans-serif;
         margin: 0;
-        background-color: #f5f5f5;
+        background: radial-gradient(circle at top right, #ffffff 0%, var(--page-bg) 55%);
+        color: var(--text-main);
     }
 
     .container {
         width: 95%;
-        margin: 20px auto;
-        border: 2px dashed #ccc;
-        padding: 20px;
-        background-color: white;
+        margin: 24px auto;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px;
+        background-color: var(--panel-bg);
+        box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
     }
 
     /* HEADER */
@@ -25,10 +42,16 @@
         justify-content: space-between;
     }
 
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
     .logo {
         font-size: 40px;
         font-weight: bold;
-        color: red;
+        color: var(--brand-red);
     }
 
     .title {
@@ -41,12 +64,39 @@
     .login {
         font-size: 14px;
         text-decoration: none;
-        background: red;
-        color: black;
+        background: var(--brand-red);
+        color: #ffffff;
         padding: 10px 18px;
         border: 2px solid black;
         border-radius: 5px;
         font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .cheat {
+        font-size: 14px;
+        text-decoration: none;
+        background: var(--brand-dark);
+        color: white;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .login:hover,
+    .cheat:hover,
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+
+    .main {
+        display: flex;
+        gap: 22px;
+        align-items: flex-start;
     }
 
     /* PROGRESS BAR */
@@ -235,7 +285,10 @@
     <div class="header">
         <div class="logo">SCSU</div>
         <div class="title">University Application</div>
-        <a class="login" href="{{ url_for('auth.login') }}">Log-in/Sign-up</a>
+        <div class="header-actions">
+            <a class="cheat" href="{{ url_for('views.admin_review_applications') }}">Cheat</a>
+            <a class="login" href="{{ url_for('auth.login') }}">Log-in/Sign-up</a>
+        </div>
     </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -266,15 +319,15 @@
 
         <!-- SIDEBAR -->
         <div class="sidebar">
-            <button>University Application</button>
-            <button>Registration Status</button>
-            <button>Information</button>
-            <button>Staff Inquiries</button>
+            <a href="{{ url_for('views.start_application') }}"><button type="button">University Application</button></a>
+            <a href="{{ url_for('views.home') }}"><button type="button">Registration Status</button></a>
+            <a href="{{ url_for('views.information') }}"><button type="button">Information</button></a>
+            <a href="{{ url_for('views.staff_inquiries') }}"><button type="button">Staff Inquiries</button></a>
         </div>
 
         <!-- FORM -->
         <div class="form-area">
-            <form method="POST" action="{{ url_for('views.home') }}">
+            <form method="POST" action="{{ url_for('views.start_application') }}">
                 <div class="form-card">
                     <h2>PERSONAL INFORMATION</h2>
 
