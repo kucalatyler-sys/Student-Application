@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from .modles import save_submitted_application, get_submitted_applications
 
 views = Blueprint('views', __name__)
 
@@ -214,7 +215,16 @@ def review_and_submit():
                                  major_info=major_info,
                                  additional_info=additional_info)
 
-        flash('Application submitted successfully!', category='success')
+        saved_application = save_submitted_application({
+            'personal_info': personal_info,
+            'financial_info': financial_info,
+            'academic_info': academic_info,
+            'parental_info': parental_info,
+            'major_info': major_info,
+            'additional_info': additional_info
+        })
+
+        flash(f"Application #{saved_application['id']} submitted successfully!", category='success')
         return redirect(url_for('views.review_and_submit'))
 
     return render_template('review_and_submit.html',
@@ -224,5 +234,11 @@ def review_and_submit():
                          parental_info=parental_info,
                          major_info=major_info,
                          additional_info=additional_info)
+
+
+@views.route('/admin/review-applications', methods=['GET'])
+def admin_review_applications():
+    applications = get_submitted_applications()
+    return render_template('admin_verification.html', applications=applications)
 
 
