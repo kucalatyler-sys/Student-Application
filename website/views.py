@@ -10,6 +10,7 @@ from .modles import (
     get_submitted_applications,
     get_submitted_application_by_id,
     update_application_status,
+    delete_application,
 )
 from .notifications import send_submission_confirmation, send_status_update
 
@@ -385,6 +386,12 @@ def admin_verification(application_id):
                 )
                 send_status_update(student_email, application_id, new_status, admin_notes)
                 flash(f'Status updated to "{new_status}".', category='success')
+
+                # If rejected, delete the application and all related data
+                if new_status == 'Rejected':
+                    delete_application(application_id)
+                    flash('Application has been removed from the database.', category='success')
+                    return redirect(url_for('views.admin_review_applications'))
             else:
                 flash('Could not update status.', category='error')
         return redirect(url_for('views.admin_verification', application_id=application_id))

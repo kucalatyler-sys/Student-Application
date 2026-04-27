@@ -416,3 +416,16 @@ def update_application_status(application_id, new_status, admin_id=None, admin_n
 		application.admin_notes = admin_notes
 	db.session.commit()
 	return _serialize_application(application)
+
+
+def delete_application(application_id):
+	"""Permanently delete an application and all related student data."""
+	application = db.session.get(Application, application_id)
+	if application is None:
+		return False
+	student = application.student
+	db.session.delete(application)
+	if student is not None:
+		db.session.delete(student)
+	db.session.commit()
+	return True

@@ -342,23 +342,23 @@
             <form method="POST" action="{{ url_for('views.academic_history') }}" enctype="multipart/form-data">
                 <div class="form-card">
                     <div class="form-group">
-                        <label for="schoolName">Most Recent School</label>
+                        <label for="schoolName">Most Recent School<span style="color: red;">*</span></label>
                         <input id="schoolName" name="schoolName" type="text" required placeholder="School name and location" value="{{ academic_info.get('school_name', '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label for="gpa">GPA / Academic Performance</label>
+                        <label for="gpa">GPA / Academic Performance<span style="color: red;">*</span></label>
                         <input id="gpa" name="gpa" type="text" required placeholder="GPA, class rank, or honors" value="{{ academic_info.get('gpa', '') }}">
                     </div>
 
                     <div class="form-group file-upload">
-                        <label for="transcriptUpload">Upload Supporting Documents</label>
+                        <label for="transcriptUpload">Upload Supporting Documents<span style="color: red;">*</span></label>
                         <input id="transcriptUpload" name="transcriptUpload" class="file-input" type="file" accept=".pdf,application/pdf" required>
                         <div class="file-note">Upload a PDF transcript document only.</div>
                     </div>
 
                     <div class="form-group">
-                        <label for="academicNotes">Academic Notes</label>
+                        <label for="academicNotes">Academic Notes<span style="color: red;">*</span></label>
                         <textarea id="academicNotes" name="academicNotes" required placeholder="Awards, extracurriculars, or course highlights">{{ academic_info.get('academic_notes', '') }}</textarea>
                     </div>
 

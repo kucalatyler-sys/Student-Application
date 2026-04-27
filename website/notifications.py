@@ -62,7 +62,7 @@ def _build_message(to_address, application_id, status, admin_notes=None):
     copy = _STATUS_COPY.get(status, _DEFAULT_COPY)
     subject = copy['subject'].format(id=application_id)
     body_lines = [
-        f"Dear applicant,\n",
+        f"Dear Applicant,\n",
         copy['body'].format(id=application_id, status=status),
     ]
     if admin_notes:
