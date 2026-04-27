@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Application Status</title>
+<title>My Submissions</title>
 <style>
     :root {
         --page-bg: #eef2f7;
@@ -36,7 +36,6 @@
         box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
     }
 
-    /* HEADER */
     .header {
         display: flex;
         align-items: center;
@@ -87,22 +86,21 @@
     }
 
     .login:hover,
-    .cheat:hover,
-    .btn:hover {
+    .cheat:hover {
         opacity: 0.9;
         transform: translateY(-1px);
     }
-
 
     .main {
         display: flex;
         gap: 22px;
         align-items: flex-start;
+        margin-top: 22px;
     }
 
-    /* SIDEBAR */
     .sidebar {
         width: 200px;
+        flex-shrink: 0;
     }
 
     .sidebar button {
@@ -116,138 +114,124 @@
         cursor: pointer;
     }
 
-    /* STATUS CONTENT */
-    .form-area {
+    .sidebar button:hover {
+        opacity: 0.9;
+    }
+
+    .content {
         flex: 1;
-        padding: 0;
     }
 
-    .form-card {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 28px;
-        max-width: 680px;
-        background: linear-gradient(180deg, #ffffff 0%, var(--panel-soft) 100%);
-    }
-
-    .form-card h2 {
-        margin-top: 0;
-        margin-bottom: 10px;
-        font-size: 27px;
-        letter-spacing: 0.5px;
+    .content h2 {
+        margin: 0 0 6px;
+        font-size: 24px;
     }
 
     .subtitle {
-        margin: 0 0 22px;
+        margin: 0 0 20px;
         color: var(--text-muted);
-        line-height: 1.5;
     }
 
-    .status {
-        margin-top: 16px;
-        padding: 14px;
+    .table-wrap {
+        background: #ffffff;
+        border: 1px solid var(--line);
         border-radius: 10px;
-        border: 1px solid var(--status-border);
+        overflow: hidden;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 14px;
+    }
+
+    th {
+        background: var(--panel-soft);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    td:last-child {
+        white-space: nowrap;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 999px;
         background: var(--status-bg);
         color: var(--status-text);
+        font-size: 12px;
+        font-weight: bold;
+        border: 1px solid var(--status-border);
+    }
+
+    .view-btn {
+        display: inline-block;
+        text-decoration: none;
+        padding: 7px 14px;
+        background: var(--brand-dark);
+        color: #ffffff;
+        border-radius: 6px;
+        font-size: 13px;
         font-weight: bold;
     }
 
-    .status strong {
-        margin-right: 8px;
+    .view-btn:hover {
+        opacity: 0.85;
     }
 
     .empty {
-        margin-top: 16px;
-        padding: 14px;
-        border-radius: 10px;
-        border: 1px dashed #9ca3af;
-        background: #ffffff;
+        padding: 28px;
+        text-align: center;
         color: var(--text-muted);
-        font-weight: bold;
-    }
-
-    .btn-row {
-        margin-top: 20px;
-    }
-
-    .submission-list {
-        margin-top: 18px;
-        display: grid;
-        gap: 12px;
-    }
-
-    .submission-item {
-        padding: 14px;
-        border: 1px solid var(--line);
+        border: 1px dashed #9ca3af;
         border-radius: 10px;
-        background: #ffffff;
     }
 
-    .submission-item strong {
-        display: block;
-        margin-bottom: 4px;
+    .actions-row {
+        margin-top: 18px;
+        display: flex;
+        gap: 10px;
     }
 
     .btn {
         display: inline-block;
         text-decoration: none;
+        padding: 11px 20px;
         background: var(--brand-dark);
         color: #ffffff;
-        padding: 12px 18px;
         border-radius: 8px;
-        border: 1px solid var(--brand-dark);
         font-weight: bold;
-        transition: transform 0.15s ease, opacity 0.15s ease;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
     }
 
-    @media (max-width: 900px) {
-        .main {
-            flex-direction: column;
-        }
-
-        .sidebar {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .sidebar button {
-            margin-bottom: 0;
-        }
+    .btn:hover {
+        opacity: 0.88;
     }
 
-    @media (max-width: 640px) {
-        .header {
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .title {
-            order: 3;
-            flex-basis: 100%;
-            text-align: left;
-        }
-
-        .form-card {
-            padding: 20px;
-        }
-
-        .sidebar {
-            grid-template-columns: 1fr;
-        }
+    .btn-secondary {
+        background: #ffffff;
+        color: var(--brand-dark);
+        border: 2px solid var(--brand-dark);
     }
 </style>
 </head>
 <body>
-
 <div class="container">
 
-    <!-- HEADER -->
     <div class="header">
         <div class="logo">SCSU</div>
-        <div class="title">Registration Status</div>
+        <div class="title">My Submissions</div>
         <div class="header-actions">
             <a class="cheat" href="{{ url_for('views.admin_review_applications') }}">Cheat</a>
             {% if current_user.is_authenticated %}
@@ -258,51 +242,53 @@
         </div>
     </div>
 
-    <!-- MAIN -->
     <div class="main">
-        <!-- SIDEBAR -->
         <div class="sidebar">
             <a href="{{ url_for('views.start_application') }}"><button type="button">University Application</button></a>
             <a href="{{ url_for('views.home') }}"><button type="button">Registration Status</button></a>
             <a href="{{ url_for('views.information') }}"><button type="button">Information</button></a>
             <a href="{{ url_for('views.my_submissions') }}"><button type="button">My Submissions</button></a>
-            <a href="{{ url_for('auth.change_password') }}"><button type="button">Change Password</button></a>
         </div>
 
-        <div class="form-area">
-            <div class="form-card">
-                <h2>Application Status</h2>
-                <p class="subtitle">Check your latest submission and continue to a new application when you are ready.</p>
+        <div class="content">
+            <h2>My Submissions</h2>
+            <p class="subtitle">Hello, {{ current_user.first_name }}. Here are all the applications you have submitted.</p>
 
-                {% if has_submitted_application %}
-                    <div class="status">
-                        <strong>Latest Submission:</strong> Application #{{ latest_application.id }} on {{ latest_application.submitted_at }}
-                    </div>
-
-                    <div class="submission-list">
-                        {% for application in applications %}
-                            <div class="submission-item">
-                                <strong>Application #{{ application.id }}</strong>
-                                <div>Submitted: {{ application.submitted_at }}</div>
-                                <div>Status: {{ application.status }}</div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="empty">No application has been submitted yet.</div>
-                {% endif %}
-
-                <div class="btn-row">
-                    {% if has_submitted_application %}
-                        <a class="btn" href="{{ url_for('views.start_application') }}">Start New Application Process</a>
-                    {% else %}
-                        <a class="btn" href="{{ url_for('views.start_application') }}">Start Application Process</a>
-                    {% endif %}
+            {% if submissions %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Application ID</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub in submissions %}
+                                <tr>
+                                    <td>#{{ sub.id }}</td>
+                                    <td>{{ sub.submitted_at }}</td>
+                                    <td><span class="badge">{{ sub.status }}</span></td>
+                                    <td>
+                                        <a class="view-btn" href="{{ url_for('views.my_submission_detail', application_id=sub.id) }}">View Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
+            {% else %}
+                <div class="empty">You have not submitted any applications yet.</div>
+            {% endif %}
+
+            <div class="actions-row">
+                <a class="btn" href="{{ url_for('views.start_application') }}">Start New Application</a>
+                <a class="btn btn-secondary" href="{{ url_for('auth.change_password') }}">Change Password</a>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>

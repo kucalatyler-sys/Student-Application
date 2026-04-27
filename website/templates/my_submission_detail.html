@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application #{{ application.id }}</title>
+<style>
+    :root {
+        --page-bg: #eef2f7;
+        --panel-bg: #ffffff;
+        --text-main: #111827;
+        --text-muted: #4b5563;
+        --brand-red: #d60000;
+        --brand-dark: #111827;
+        --line: #d1d5db;
+        --status-bg: #ecf8f0;
+        --status-border: #86d8a5;
+        --status-text: #14532d;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: radial-gradient(circle at top right, #ffffff 0%, var(--page-bg) 55%);
+        color: var(--text-main);
+    }
+
+    .container {
+        width: 95%;
+        max-width: 1100px;
+        margin: 24px auto;
+    }
+
+    .page-header {
+        background: var(--panel-bg);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px 28px;
+        margin-bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .page-header h1 {
+        margin: 0 0 6px;
+        font-size: 26px;
+    }
+
+    .meta {
+        color: var(--text-muted);
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .badge {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: var(--status-bg);
+        color: var(--status-text);
+        font-size: 13px;
+        font-weight: bold;
+        border: 1px solid var(--status-border);
+    }
+
+    .back-link {
+        display: inline-block;
+        text-decoration: none;
+        color: var(--brand-dark);
+        font-weight: bold;
+        font-size: 14px;
+        margin-top: 8px;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    .logo {
+        font-size: 38px;
+        font-weight: bold;
+        color: var(--brand-red);
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 14px;
+    }
+
+    .section {
+        background: var(--panel-bg);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 18px;
+    }
+
+    .section h3 {
+        margin: 0 0 12px;
+        font-size: 16px;
+        color: var(--brand-dark);
+        border-bottom: 2px solid var(--brand-red);
+        padding-bottom: 6px;
+    }
+
+    .item {
+        margin-bottom: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .item strong {
+        color: var(--text-muted);
+        display: inline-block;
+        min-width: 160px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header">
+        <div>
+            <div class="logo">SCSU</div>
+            <h1>Application #{{ application.id }}</h1>
+            <p class="meta">Submitted: {{ application.submitted_at }}</p>
+            <span class="badge">{{ application.status }}</span>
+        </div>
+        <div>
+            <a class="back-link" href="{{ url_for('views.my_submissions') }}">&larr; Back to My Submissions</a>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="section">
+            <h3>Personal Information</h3>
+            <div class="item"><strong>Name:</strong> {{ application.data.personal_info.get('first_name', '') }} {{ application.data.personal_info.get('middle_initial', '') }} {{ application.data.personal_info.get('last_name', '') }}</div>
+            <div class="item"><strong>Date of Birth:</strong> {{ application.data.personal_info.get('dob', 'N/A') }}</div>
+            <div class="item"><strong>Email:</strong> {{ application.data.personal_info.get('contact', 'N/A') }}</div>
+            <div class="item"><strong>Phone:</strong> {{ application.data.personal_info.get('phone_number', 'N/A') }}</div>
+            <div class="item"><strong>Citizenship:</strong> {{ application.data.personal_info.get('citizenship', 'N/A') }}</div>
+            {% if application.data.personal_info.get('street_address') %}
+            <div class="item"><strong>Address:</strong> {{ application.data.personal_info.get('street_address', '') }}, {{ application.data.personal_info.get('city', '') }}, {{ application.data.personal_info.get('state', '') }} {{ application.data.personal_info.get('zipcode', '') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h3>Financial Information</h3>
+            <div class="item"><strong>Household Income:</strong> {{ application.data.financial_info.get('household_income', 'N/A') }}</div>
+            <div class="item"><strong>Financial Aid Requested:</strong> {{ application.data.financial_info.get('financial_aid', 'N/A') }}</div>
+            {% if application.data.financial_info.get('financial_aid') == 'yes' %}
+            <div class="item"><strong>Aid Amount:</strong> {{ application.data.financial_info.get('aid_amount', 'N/A') }}</div>
+            {% endif %}
+            <div class="item"><strong>Employment:</strong> {{ application.data.financial_info.get('employment', 'N/A') }}</div>
+            <div class="item"><strong>Volunteer Work:</strong> {{ application.data.financial_info.get('volunteer_work', 'N/A') }}</div>
+            <div class="item"><strong>Assets &amp; Savings:</strong> {{ application.data.financial_info.get('assets', 'N/A') }}</div>
+            <div class="item"><strong>Campus Expenses:</strong> {{ application.data.financial_info.get('expenses', 'N/A') }}</div>
+            {% if application.data.financial_info.get('financial_notes') %}
+            <div class="item"><strong>Notes:</strong> {{ application.data.financial_info.get('financial_notes') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h3>Academic History</h3>
+            <div class="item"><strong>School:</strong> {{ application.data.academic_info.get('school_name', 'N/A') }}</div>
+            <div class="item"><strong>GPA:</strong> {{ application.data.academic_info.get('gpa', 'N/A') }}</div>
+            <div class="item"><strong>Notes:</strong> {{ application.data.academic_info.get('academic_notes', 'N/A') }}</div>
+            <div class="item"><strong>Transcript:</strong> {{ application.data.academic_info.get('transcript_filename', 'N/A') }}</div>
+        </div>
+
+        <div class="section">
+            <h3>Parental / Guardian Income</h3>
+            <div class="item"><strong>Guardian Name:</strong> {{ application.data.parental_info.get('guardian_first_name', '') }} {{ application.data.parental_info.get('guardian_middle_initial', '') }} {{ application.data.parental_info.get('guardian_last_name', '') }}</div>
+            <div class="item"><strong>Relationship:</strong> {{ application.data.parental_info.get('guardian_relationship', 'N/A') }}</div>
+            <div class="item"><strong>Guardian Income:</strong> {{ application.data.parental_info.get('parent_income', 'N/A') }}</div>
+            <div class="item"><strong>Employment:</strong> {{ application.data.parental_info.get('employment_details', 'N/A') }}</div>
+            <div class="item"><strong>Support Source:</strong> {{ application.data.parental_info.get('support_source', 'N/A') }}</div>
+            <div class="item"><strong>Household Size:</strong> {{ application.data.parental_info.get('household_size', 'N/A') }}</div>
+            {% if application.data.parental_info.get('income_notes') %}
+            <div class="item"><strong>Notes:</strong> {{ application.data.parental_info.get('income_notes') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h3>Program Selection</h3>
+            <div class="item"><strong>Major:</strong> {{ application.data.major_info.get('major_choice', 'N/A') }}</div>
+            <div class="item"><strong>Minor:</strong> {{ application.data.major_info.get('minor_choice', 'N/A') or 'None' }}</div>
+            {% if application.data.major_info.get('major_comments') %}
+            <div class="item"><strong>Comments:</strong> {{ application.data.major_info.get('major_comments') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h3>Additional Information</h3>
+            <div class="item">{{ application.data.additional_info.get('additional_info_text') or 'No additional information provided.' }}</div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

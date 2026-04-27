@@ -81,6 +81,80 @@
         font-size: 14px;
     }
 
+    .action-panel {
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-bottom: 18px;
+    }
+
+    .action-panel h2 {
+        margin: 0 0 14px;
+        font-size: 17px;
+        color: #111827;
+    }
+
+    .action-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: flex-end;
+    }
+
+    .action-row label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #374151;
+    }
+
+    .action-row select,
+    .action-row textarea {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 8px 10px;
+        font-size: 14px;
+        background: #f9fafb;
+        color: #111827;
+    }
+
+    .action-row select {
+        min-width: 190px;
+    }
+
+    .action-row textarea {
+        min-width: 260px;
+        resize: vertical;
+    }
+
+    .action-row .save-btn {
+        padding: 9px 22px;
+        background: #111827;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        align-self: flex-end;
+    }
+
+    .action-row .save-btn:hover {
+        opacity: 0.88;
+    }
+
+    .flash-success {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        border-radius: 6px;
+        padding: 10px 14px;
+        margin-bottom: 14px;
+        font-size: 14px;
+    }
+
     .item strong {
         color: #111827;
     }
@@ -93,6 +167,39 @@
         <div class="meta">Submitted: {{ application.submitted_at }}</div>
         <span class="badge">{{ application.status }}</span><br>
         <a class="back-link" href="{{ url_for('views.admin_review_applications') }}">&larr; Back to Application List</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="{% if category == 'error' %}flash-error{% else %}flash-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="action-panel">
+        <h2>Update Application Status</h2>
+        <form method="POST">
+            <div class="action-row">
+                <div>
+                    <label for="status">New Status</label>
+                    <select id="status" name="status" required>
+                        <option value="" disabled selected>Select status…</option>
+                        <option value="Under Review" {% if application.status == 'Under Review' %}selected{% endif %}>Under Review</option>
+                        <option value="More Info Needed" {% if application.status == 'More Info Needed' %}selected{% endif %}>More Info Needed</option>
+                        <option value="Approved" {% if application.status == 'Approved' %}selected{% endif %}>Approved</option>
+                        <option value="Rejected" {% if application.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="admin_notes">Notes to student (optional)</label>
+                    <textarea id="admin_notes" name="admin_notes" rows="2" placeholder="Visible to student in their email…"></textarea>
+                </div>
+                <button class="save-btn" type="submit">Save &amp; Notify</button>
+            </div>
+        </form>
     </div>
 
     <div class="grid">

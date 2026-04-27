@@ -1,11 +1,61 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from functools import wraps
+
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask_login import current_user, login_required
+
 from .modles import (
-    save_submitted_application,
+    get_application_snapshot,
+    get_user_submissions,
+    save_application_snapshot,
     get_submitted_applications,
     get_submitted_application_by_id,
+    update_application_status,
 )
+from .notifications import send_submission_confirmation, send_status_update
 
 views = Blueprint('views', __name__)
+
+
+def admin_required(view_func):
+    @wraps(view_func)
+    def wrapped_view(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for('auth.login'))
+        if not current_user.is_admin:
+            flash('You are not authorized to view that page.', category='error')
+            return redirect(url_for('views.home'))
+        return view_func(*args, **kwargs)
+
+    return wrapped_view
+
+
+def get_current_application_data():
+    application_id = session.get('application_id')
+    if not application_id:
+        return {}
+
+    application = get_application_snapshot(application_id, user_id=current_user.id if current_user.is_authenticated else None)
+    if not application:
+        session.pop('application_id', None)
+        return {}
+
+    return application['data']
+
+
+def save_current_application(status='Draft'):
+    saved_application = save_application_snapshot(
+        personal_info=session.get('personal_info', {}),
+        financial_info=session.get('financial_info', {}),
+        academic_info=session.get('academic_info', {}),
+        parental_info=session.get('parental_info', {}),
+        major_info=session.get('major_info', {}),
+        additional_info=session.get('additional_info', {}),
+        application_id=session.get('application_id'),
+        user_id=current_user.id,
+        status=status,
+    )
+    session['application_id'] = saved_application['id']
+    return saved_application
 
 
 def is_pdf_file(file_obj):
@@ -14,21 +64,33 @@ def is_pdf_file(file_obj):
     return file_obj.filename.lower().endswith('.pdf')
 
 @views.route('/', methods=['GET'])
+@login_required
 def home():
-    applications = get_submitted_applications()
+    applications = get_submitted_applications(user_id=current_user.id)
     has_submitted_application = len(applications) > 0
     latest_application = applications[0] if has_submitted_application else None
 
     return render_template(
         'home.html',
+        applications=applications,
         has_submitted_application=has_submitted_application,
         latest_application=latest_application,
     )
 
 
 @views.route('/start-application', methods=['GET', 'POST'])
+@login_required
 def start_application():
     if request.method == 'POST':
+        existing_application = get_application_snapshot(session.get('application_id'), user_id=current_user.id) if session.get('application_id') else None
+        if existing_application and existing_application['status'] == 'Submitted':
+            session.pop('application_id', None)
+            session.pop('financial_info', None)
+            session.pop('academic_info', None)
+            session.pop('parental_info', None)
+            session.pop('major_info', None)
+            session.pop('additional_info', None)
+
         first_name = request.form.get('firstName', '').strip()
         middle_initial = request.form.get('middleInitial', '').strip()
         last_name = request.form.get('lastName', '').strip()
@@ -66,14 +128,16 @@ def start_application():
             'zipcode': zipcode,
             'phone_number': phone_number
         }
+        save_current_application()
 
         return redirect(url_for('views.financial'))
 
-    # Pre-populate form with session data
-    personal_info = session.get('personal_info', {})
+    application_data = get_current_application_data()
+    personal_info = session.get('personal_info') or application_data.get('personal_info', {})
     return render_template('base.html', personal_info=personal_info)
 
 @views.route('/financial', methods=['GET', 'POST'])
+@login_required
 def financial():
     if request.method == 'POST':
         household_income = request.form.get('householdIncome', '').strip()
@@ -105,14 +169,16 @@ def financial():
             'expenses': expenses,
             'financial_notes': financial_notes
         }
+        save_current_application()
 
         return redirect(url_for('views.academic_history'))
 
-    # Pre-populate form with session data
-    financial_info = session.get('financial_info', {})
+    application_data = get_current_application_data()
+    financial_info = session.get('financial_info') or application_data.get('financial_info', {})
     return render_template('financial.html', financial_info=financial_info)
 
 @views.route('/academic-history', methods=['GET', 'POST'])
+@login_required
 def academic_history():
     if request.method == 'POST':
         school_name = request.form.get('schoolName', '').strip()
@@ -135,14 +201,16 @@ def academic_history():
             'academic_notes': academic_notes,
             'transcript_filename': transcript.filename
         }
+        save_current_application()
 
         return redirect(url_for('views.income'))
 
-    # Pre-populate form with session data
-    academic_info = session.get('academic_info', {})
+    application_data = get_current_application_data()
+    academic_info = session.get('academic_info') or application_data.get('academic_info', {})
     return render_template('academic_history.html', academic_info=academic_info)
 
 @views.route('/income', methods=['GET', 'POST'])
+@login_required
 def income():
     if request.method == 'POST':
         guardianfirst_name = request.form.get('guardianfirstName', '').strip()
@@ -158,7 +226,18 @@ def income():
 
         if not all([guardianfirst_name, guardianmiddle_initial, guardianlast_name, guardian_relationship, parent_income, employment_details, support_source, household_size, income_notes]) or not income_documents or income_documents.filename == '':
             flash('Please fill out all required parental income fields and upload your documents.', category='error')
-            return render_template('income.html')
+            parental_info = {
+                'guardian_first_name': guardianfirst_name,
+                'guardian_middle_initial': guardianmiddle_initial,
+                'guardian_last_name': guardianlast_name,
+                'guardian_relationship': guardian_relationship,
+                'parent_income': parent_income,
+                'employment_details': employment_details,
+                'support_source': support_source,
+                'household_size': household_size,
+                'income_notes': income_notes,
+            }
+            return render_template('income.html', parental_info=parental_info)
 
         if not is_pdf_file(income_documents):
             flash('Guardian income document upload must be a PDF file (.pdf).', category='error')
@@ -177,14 +256,16 @@ def income():
             'income_notes': income_notes,
             'income_documents_filename': income_documents.filename
         }
+        save_current_application()
 
         return redirect(url_for('views.major'))
 
-    # Pre-populate form with session data
-    parental_info = session.get('parental_info', {})
+    application_data = get_current_application_data()
+    parental_info = session.get('parental_info') or application_data.get('parental_info', {})
     return render_template('income.html', parental_info=parental_info)
 
 @views.route('/major', methods=['GET', 'POST'])
+@login_required
 def major():
     if request.method == 'POST':
         major_choice = request.form.get('major', '').strip()
@@ -201,14 +282,16 @@ def major():
             'minor_choice': minor_choice,
             'major_comments': major_comments
         }
+        save_current_application()
 
         return redirect(url_for('views.additional_info'))
 
-    # Pre-populate form with session data
-    major_info = session.get('major_info', {})
+    application_data = get_current_application_data()
+    major_info = session.get('major_info') or application_data.get('major_info', {})
     return render_template('major.html', major_info=major_info)
 
 @views.route('/additional-info', methods=['GET', 'POST'])
+@login_required
 def additional_info():
     if request.method == 'POST':
         additional_info_text = request.form.get('additionalInfo', '').strip()
@@ -217,22 +300,24 @@ def additional_info():
         session['additional_info'] = {
             'additional_info_text': additional_info_text
         }
+        save_current_application()
 
         return redirect(url_for('views.review_and_submit'))
 
-    # Pre-populate form with session data
-    additional_info = session.get('additional_info', {})
+    application_data = get_current_application_data()
+    additional_info = session.get('additional_info') or application_data.get('additional_info', {})
     return render_template('additional_info.html', additional_info=additional_info)
 
 @views.route('/review-and-submit', methods=['GET', 'POST'])
+@login_required
 def review_and_submit():
-    # Retrieve all stored data from session
-    personal_info = session.get('personal_info', {})
-    financial_info = session.get('financial_info', {})
-    academic_info = session.get('academic_info', {})
-    parental_info = session.get('parental_info', {})
-    major_info = session.get('major_info', {})
-    additional_info = session.get('additional_info', {})
+    application_data = get_current_application_data()
+    personal_info = session.get('personal_info') or application_data.get('personal_info', {})
+    financial_info = session.get('financial_info') or application_data.get('financial_info', {})
+    academic_info = session.get('academic_info') or application_data.get('academic_info', {})
+    parental_info = session.get('parental_info') or application_data.get('parental_info', {})
+    major_info = session.get('major_info') or application_data.get('major_info', {})
+    additional_info = session.get('additional_info') or application_data.get('additional_info', {})
 
     if request.method == 'POST':
         confirm_submit = request.form.get('confirmSubmit')
@@ -246,14 +331,14 @@ def review_and_submit():
                                  major_info=major_info,
                                  additional_info=additional_info)
 
-        saved_application = save_submitted_application({
-            'personal_info': personal_info,
-            'financial_info': financial_info,
-            'academic_info': academic_info,
-            'parental_info': parental_info,
-            'major_info': major_info,
-            'additional_info': additional_info
-        })
+        saved_application = save_current_application(status='Submitted')
+
+        # ── Send confirmation email ──────────────────────────────────────────
+        student_email = (
+            session.get('personal_info', {}).get('contact')
+            or current_user.email
+        )
+        send_submission_confirmation(student_email, saved_application['id'])
 
         flash(f"Application #{saved_application['id']} submitted successfully!", category='success')
         return redirect(url_for('views.review_and_submit'))
@@ -268,19 +353,60 @@ def review_and_submit():
 
 
 @views.route('/admin/review-applications', methods=['GET'])
+@admin_required
 def admin_review_applications():
     applications = get_submitted_applications()
     return render_template('admin_list.html', applications=applications)
 
 
-@views.route('/admin/review-applications/<int:application_id>', methods=['GET'])
+@views.route('/admin/review-applications/<int:application_id>', methods=['GET', 'POST'])
+@admin_required
 def admin_verification(application_id):
     application = get_submitted_application_by_id(application_id)
     if not application:
         flash('Application not found.', category='error')
         return redirect(url_for('views.admin_review_applications'))
 
+    if request.method == 'POST':
+        new_status = request.form.get('status', '').strip()
+        admin_notes = request.form.get('admin_notes', '').strip() or None
+        if new_status:
+            updated = update_application_status(
+                application_id,
+                new_status,
+                admin_id=current_user.id,
+                admin_notes=admin_notes,
+            )
+            if updated:
+                # Notify the student via the contact email they provided
+                student_email = (
+                    updated['data']['personal_info'].get('contact')
+                    or (updated.get('user_email'))
+                )
+                send_status_update(student_email, application_id, new_status, admin_notes)
+                flash(f'Status updated to "{new_status}".', category='success')
+            else:
+                flash('Could not update status.', category='error')
+        return redirect(url_for('views.admin_verification', application_id=application_id))
+
     return render_template('admin_verification.html', application=application)
+
+
+@views.route('/my-submissions', methods=['GET'])
+@login_required
+def my_submissions():
+    submissions = get_user_submissions(user_id=current_user.id)
+    return render_template('my_submissions.html', submissions=submissions)
+
+
+@views.route('/my-submissions/<int:application_id>', methods=['GET'])
+@login_required
+def my_submission_detail(application_id):
+    application = get_submitted_application_by_id(application_id, user_id=current_user.id)
+    if not application:
+        flash('Submission not found.', category='error')
+        return redirect(url_for('views.my_submissions'))
+    return render_template('my_submission_detail.html', application=application)
 
 
 @views.route('/information', methods=['GET'])
