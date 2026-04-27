@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Information</title>
+<style>
+    :root {
+        --page-bg: #eef2f7;
+        --panel-bg: #ffffff;
+        --panel-soft: #f7fafc;
+        --text-main: #111827;
+        --text-muted: #4b5563;
+        --brand-red: #d60000;
+        --brand-dark: #111827;
+        --line: #d1d5db;
+        --status-bg: #ecf8f0;
+        --status-border: #86d8a5;
+        --status-text: #14532d;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: radial-gradient(circle at top right, #ffffff 0%, var(--page-bg) 55%);
+        color: var(--text-main);
+    }
+
+    .container {
+        width: 95%;
+        margin: 24px auto;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px;
+        background-color: var(--panel-bg);
+        box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 40px;
+        font-weight: bold;
+        color: var(--brand-red);
+    }
+
+    .title {
+        text-align: center;
+        flex: 1;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .login {
+        font-size: 14px;
+        text-decoration: none;
+        background: var(--brand-red);
+        color: #ffffff;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .cheat {
+        font-size: 14px;
+        text-decoration: none;
+        background: var(--brand-dark);
+        color: white;
+        padding: 10px 18px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .login:hover,
+    .cheat:hover,
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+
+    .main {
+        display: flex;
+        gap: 22px;
+        align-items: flex-start;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar button {
+        width: 100%;
+        background: var(--brand-red);
+        color: #ffffff;
+        border: 2px solid black;
+        padding: 15px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* INFORMATION CONTENT */
+    .form-area {
+        flex: 1;
+        padding: 0;
+    }
+
+    .form-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 28px;
+        max-width: 680px;
+        background: linear-gradient(180deg, #ffffff 0%, var(--panel-soft) 100%);
+    }
+
+    .form-card h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 27px;
+        letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+        margin: 0 0 22px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    .section {
+        margin-top: 18px;
+        padding: 16px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+    }
+
+    .section h3 {
+        margin: 0 0 10px;
+        font-size: 17px;
+    }
+
+    .section p {
+        margin: 0;
+        color: var(--text-muted);
+        line-height: 1.55;
+    }
+
+    .section ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--text-muted);
+        line-height: 1.55;
+    }
+
+    .highlight {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid var(--status-border);
+        background: var(--status-bg);
+        color: var(--status-text);
+        font-weight: bold;
+    }
+
+    .btn-row {
+        margin-top: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--brand-dark);
+        color: #ffffff;
+        padding: 12px 18px;
+        border-radius: 8px;
+        border: 1px solid var(--brand-dark);
+        font-weight: bold;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    @media (max-width: 900px) {
+        .main {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .sidebar button {
+            margin-bottom: 0;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .header {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .title {
+            order: 3;
+            flex-basis: 100%;
+            text-align: left;
+        }
+
+        .form-card {
+            padding: 20px;
+        }
+
+        .sidebar {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">SCSU</div>
+        <div class="title">Information</div>
+        <div class="header-actions">
+            <a class="cheat" href="{{ url_for('views.admin_review_applications') }}">Cheat</a>
+            <a class="login" href="{{ url_for('auth.login') }}">Log-in/Sign-up</a>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <a href="{{ url_for('views.start_application') }}"><button type="button">University Application</button></a>
+            <a href="{{ url_for('views.home') }}"><button type="button">Registration Status</button></a>
+            <a href="{{ url_for('views.information') }}"><button type="button">Information</button></a>
+        </div>
+
+        <div class="form-area">
+            <div class="form-card">
+                <h2>Application Information</h2>
+                <p class="subtitle">Use this page as a quick guide before you begin or continue your University Application.</p>
+
+                <div class="section">
+                    <h3>What You Will Complete</h3>
+                    <ul>
+                        <li>Personal Information</li>
+                        <li>Financial Information</li>
+                        <li>Academic History</li>
+                        <li>Parental Income</li>
+                        <li>Major Selection</li>
+                        <li>Additional Information</li>
+                        <li>Review and Submit</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>Items To Prepare</h3>
+                    <ul>
+                        <li>Government-issued identification details</li>
+                        <li>Current contact information and mailing address</li>
+                        <li>Academic records and school history</li>
+                        <li>Household financial details for aid consideration</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>Before You Submit</h3>
+                    <p>Review each section for accuracy. Submitted applications are saved for staff review, and incorrect information may delay processing.</p>
+                </div>
+
+                <div class="highlight">Tip: Save your information carefully in each step and verify everything on the Review & Submit page.</div>
+
+                <div class="btn-row">
+                    <a class="btn" href="{{ url_for('views.start_application') }}">Start Application Process</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
