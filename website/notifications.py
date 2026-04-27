@@ -69,7 +69,7 @@ def _build_message(to_address, application_id, status, admin_notes=None):
         body_lines.append(f"\nNote from admissions:\n{admin_notes}")
     body_lines.append(
         "\n\nYou can log in at any time to view your application details:\n"
-        f"{current_app.config.get('APP_BASE_URL', 'http://localhost:5000')}/my-submissions\n"
+        f"{current_app.config.get('APP_BASE_URL', 'https://student-application-288f.onrender.com/')}/my-submissions\n"
         "\nSt. Cloud State University Admissions"
     )
     return Message(
